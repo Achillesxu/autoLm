@@ -23,6 +23,20 @@ function traverseLayers(layers) {
     }
 }
 
+function readJsonfile() {
+    const jsonFile = File.openDialog("请选择JSON文件", "*.json");
+    if (jsonFile === null) {
+        alert("未选择文件,脚本已取消。");
+        return;
+    }
+       // 打开并读取JSON文件
+    jsonFile.open("r");
+    var jsonData = jsonFile.read();
+    jsonFile.close();
+    var data = JSON.parse(jsonData);
+    return data
+}
+
 function main() {
     const filePath = "C:/Users/Achil/Desktop/testPsds/664392289951.psd";
     const fileRef = new File(filePath);
