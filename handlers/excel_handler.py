@@ -6,16 +6,18 @@
 @desc :
 """
 import io
-from rich import print # noqa
-from rich.traceback import Traceback # noqa
-from openpyxl import load_workbook
-from collections import defaultdict
-FontRedColor = 'FFEA3324'
+import json
 
+from rich import print  # noqa
+from rich.traceback import Traceback  # noqa
+from openpyxl import load_workbook
+
+
+DataPath = 'C:/Users/twosu/Desktop'
 
 class ExcelHandler:
-    def __init__(self, f_path: str | io.BytesIO, sheet_name: str|None = None):
-        self.f_path = f_path
+    def __init__(self, f_path: str | io.BytesIO, sheet_name: str | None = None):
+        self.f_path = f'{DataPath}/{f_path}'
         self.sheet_name = sheet_name
         self.wb = None
         self.ws = None
@@ -50,57 +52,42 @@ class ExcelHandler:
             print(f'读取 sheet: [red]{self.sheet_name}[/red]')
 
         cur_sheet = self.wb[self.sheet_name]
-        find_header = False
         row_header = list()
-        row_datas = list()
+        row_data = list()
+
+        for cell in cur_sheet[1]:
+            if cell.value:
+                row_header.append(cell.value)
 
         try:
-            for row in cur_sheet.iter_rows(min_row=1, max_row=200, min_col=1, max_col=20):
-                if find_header:
-                    row_cols = list()
-                    row_cols.append({
-                        'value': row[0].value,
-                        'column': row[0].column_letter,
-                    })
-                    for co in row[1:]:
-                        if co.value and co.font.color.value == FontRedColor:
-                            row_cols.append({
-                                'value': co.value,
-                                'column': co.column_letter,
-                            })
-                        else:
-                            continue
-                    row_datas.append(row_cols)
-                else:
-                    if row[0].value == '商品ID':
-                        find_header = True
-                        for co_h in row:
-                            if co_h.value:
-                                row_header.append({
-                                    'value': co_h.value,
-                                    'column': co_h.column_letter,
-                                })
-                    else:
-                        continue
+            for row in cur_sheet.iter_rows(min_row=2, max_row=50, min_col=1, max_col=len(row_header), values_only=True):
+                if row:
+                    row_data.append(list(row))
         except Exception:
             print(Traceback())
-        # print(f'{row_header=}')
-        header_dict = {i['column']:i['value'] for i in row_header}
-        # print(f'{header_dict=}')
-        # print(row_datas)
-        target_data = list()
-        for row in row_datas:
-            tmp = defaultdict(list)
-            for col in row:
-                t_key = self.find_valid_key_value(header_dict, col['column'])
-                tmp[t_key].append(col['value'])
-            target_data.append(tmp)
 
-        # print(target_data)
-        return target_data
+        data_dict = {
+            'psds': {},
+            "output": {
+                "dir": "C:/Users/twosu/Desktop/jpgs",
+                "quality": 8
+            }
+        }
+
+        for row in row_data:
+            tmp = dict()
+            for idx, col in enumerate(row[1:], start=1):
+                if col:
+                    tmp[row_header[idx]] = col
+
+            data_dict['psds'][f'{DataPath}/{row[0]}.psd'] = tmp
+
+        with open(f'{DataPath}/job.json', "w", encoding='utf8') as f:
+            json.dump(data_dict, f, ensure_ascii=False, indent=4)
+
+        print(f'桌面已经生成 job.json 文件')
 
 
 if __name__ == '__main__':
-    eh = ExcelHandler('C:\\Users\\Achil\\Desktop\\健康节听诊器（调整）.xlsx')
-    data = eh.read_sheet_data()
-    print(data)
+    eh = ExcelHandler('C:\\Users\\twosu\\Desktop\\修改.xlsx')
+    eh.read_sheet_data()

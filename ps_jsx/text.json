@@ -1,14 +1,12 @@
 {
   "psds": {
-    "C:/Users/Achil/Desktop/testPsds/664392289951.psd": {
-      "价格": "777"
-    },
-    "C:/Users/Achil/Desktop/testPsds/664660660770.psd": {
-      "价格": "2999"
+    "C:/Users/twosu/Desktop/664392289951.psd": {
+      "价格": "777",
+      "半价": "半价1"
     }
   },
   "output": {
-    "dir": "C:/Users/Achil/Desktop/jpgs",
+    "dir": "C:/Users/twosu/Desktop/jpgs",
     "quality": 8
   }
 }
