@@ -9,21 +9,14 @@
 import typer
 from rich import print, print_json  # noqa
 
+from commands import ps_layers
+
 app = typer.Typer()
 
 
 @app.command()
-def hello(name: str):
-    data = {
-        "name": "Rick",
-        "age": 42,
-        "items": [{"name": "Portal Gun"}, {"name": "Plumbus"}],
-        "active": True,
-        "affiliation": None,
-    }
-    print(f'{name=}')
-    print_json(data=data)
-
+def ps_display_layers(file_path: str, only_text_layers: bool = True):
+    ps_layers.psd_display_layers(file_path, only_text_layers)
 
 @app.command()
 def goodbye(name: str, formal: bool = False):
