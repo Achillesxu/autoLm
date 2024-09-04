@@ -30,7 +30,7 @@ function parseJSON(jsonString) {
 }
 
 function readJsonfile() {
-    const jsonFile = File.openDialog("请选择JSON文件", "*.json");
+    const jsonFile = new File("C:/code/autoLm/TextLayerData.json");
     if (jsonFile === null) {
         return null;
     }

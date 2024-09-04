@@ -9,19 +9,19 @@
 import typer
 from rich import print, print_json  # noqa
 
-from commands import ps_layers, excel_cmd
+from commands import psd_layers, excel_cmd
 
 app = typer.Typer()
 
 
 @app.command()
-def ps_display_layers(file_path: str, only_text_layers: bool = True):
-    ps_layers.psd_display_layers(file_path, only_text_layers)
+def layers(excel_name: str):
+    psd_layers.check_psd_text_layers(excel_name)
 
 
 @app.command()
-def get_json(excel_path: str):
-    excel_cmd.read_excel2json(excel_path)
+def data(excel_name: str):
+    excel_cmd.read_excel2json(excel_name)
 
 
 if __name__ == '__main__':
