@@ -56,6 +56,7 @@ class ExcelHandler:
     def read_psd_path(self):
         cur_sheet = self.get_cur_sheet()
         row_header = list()
+        row_layers = list()
         row_data = list()
 
         try:
@@ -75,7 +76,10 @@ class ExcelHandler:
             if cell.value:
                 row_header.append(cell.value)
 
-        return file_path, row_header[2:]
+        for row in row_data:
+            row_layers.append([row_header[idx] for idx, d in enumerate(row[2:], start=2) if d])
+
+        return file_path, row_layers
 
     def read_sheet_data(self):
         cur_sheet = self.get_cur_sheet()

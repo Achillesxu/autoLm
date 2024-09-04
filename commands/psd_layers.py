@@ -25,9 +25,9 @@ def check_psd_text_layers(file_path):
                 _print_layer_names(layer)
 
     eh = ExcelHandler(str(file_path))
-    psd_paths, fix_layers = eh.read_psd_path()
+    psd_paths, psd_layers = eh.read_psd_path()
 
-    for pf in psd_paths:
+    for idx, pf in enumerate(psd_paths):
         if not Path(pf).exists():
             print(f'[red]{pf}[/red] 文件不存在')
             return
@@ -37,8 +37,8 @@ def check_psd_text_layers(file_path):
         psd = PSDImage.open(pf)
         _print_layer_names(psd)
 
-        lost_layers = [i for i in fix_layers if i not in layer_names]
-        fix_layer_names = {k: v for k, v in layer_names.items() if k in fix_layers}
+        lost_layers = [i for i in psd_layers[idx] if i not in layer_names]
+        fix_layer_names = {k: v for k, v in layer_names.items() if k in psd_layers[idx]}
 
         if len(fix_layer_names) != sum([v for v in fix_layer_names.values()]):
             print(f'[red]{pf}[/red]')
