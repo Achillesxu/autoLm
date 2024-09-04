@@ -29,7 +29,7 @@ def check_psd_text_layers(file_path):
 
     for pf in psd_paths:
         if not Path(pf).exists():
-            print(f'[red]{pf}[/red]')
+            print(f'[red]{pf}[/red] 文件不存在')
             return
 
         layer_names = defaultdict(int)
