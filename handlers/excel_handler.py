@@ -59,8 +59,12 @@ class ExcelHandler:
         row_layers = list()
         row_data = list()
 
+        for cell in cur_sheet[1]:
+            if cell.value:
+                row_header.append(cell.value)
+
         try:
-            for row in cur_sheet.iter_rows(min_row=2, max_row=100, min_col=1, max_col=2, values_only=True):
+            for row in cur_sheet.iter_rows(min_row=2, max_row=100, min_col=1, max_col=len(row_header), values_only=True):
                 if row:
                     row_data.append(list(row))
         except Exception: # noqa
@@ -71,10 +75,6 @@ class ExcelHandler:
         for row in row_data:
             f_dir = row[0].replace('\\', '/')
             file_path.append(f'{f_dir}/{row[1]}.psd')
-
-        for cell in cur_sheet[1]:
-            if cell.value:
-                row_header.append(cell.value)
 
         for row in row_data:
             row_layers.append([row_header[idx] for idx, d in enumerate(row[2:], start=2) if d])
